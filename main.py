@@ -50,4 +50,4 @@ def generate_oracle_text(question: str, mode: str) -> str:
 async def prophecy(req: OracleRequest):
     oracle_text = generate_oracle_text(req.question, req.mode)
     return OracleResponse(oracle_text=oracle_text)
-NN
+
