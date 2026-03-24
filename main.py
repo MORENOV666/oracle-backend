@@ -7,6 +7,16 @@ app = FastAPI(
     description="Backend engine for 1aquantumoracleai.com",
     version="1.0.0"
 )
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://a1quantumoracleai.com",
+        "http://a1quantumoracleai.com"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class OracleRequest(BaseModel):
     question: str
