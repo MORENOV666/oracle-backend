@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
     title="A1 Quantum Oracle API",
-    description="Backend engine for 1aquantumoracleai.com",
+    description="Backend engine for a1quantumoracleai.com",
     version="1.0.0"
 )
 app.add_middleware(
