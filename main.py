@@ -25,20 +25,13 @@ app.add_middleware(
 
 class ProphecyRequest(BaseModel):
     question: str
-    mode: str | None = "free"  # reserved for future (bound glyph, etc.)
+    mode: str | None = "free"
 
 # --- SIXFOLD ANALYTIC CORE ---------------------------------------------------
 
 def seed_from_question(question: str) -> int:
-    """
-    Deterministic seed from the question so:
-    - Same question → same prophecy
-    - Different question → different prophecy
-    """
     h = hashlib.sha256(question.strip().encode("utf-8")).hexdigest()
-    # Take a slice to keep it in int range
     return int(h[:12], 16)
-
 
 def analyze_intent(question: str) -> str:
     q = question.lower()
@@ -54,7 +47,6 @@ def analyze_intent(question: str) -> str:
         return "destiny"
     return "mystery"
 
-
 def extract_tension(question: str) -> str:
     q = question.lower()
     if any(word in q for word in ["afraid", "fear", "worried", "anxious"]):
@@ -65,9 +57,7 @@ def extract_tension(question: str) -> str:
         return "anticipation"
     return "uncertainty"
 
-
 def map_timeline(question: str, rng: random.Random) -> str:
-    # Rough symbolic timing, not literal
     options = [
         "near-term currents",
         "mid-cycle unfolding",
@@ -76,9 +66,7 @@ def map_timeline(question: str, rng: random.Random) -> str:
     ]
     return rng.choice(options)
 
-
 def weigh_convergence(intent: str, tension: str, rng: random.Random) -> str:
-    # Blend intent + tension into a qualitative outcome
     base = rng.randint(0, 100)
 
     if intent == "heart":
@@ -101,10 +89,9 @@ def weigh_convergence(intent: str, tension: str, rng: random.Random) -> str:
     else:
         return "unlikely_in_current_pattern"
 
-
 def derive_lesson(question: str, rng: random.Random) -> str:
     fragments = [
-        "a lesson in trust of your own signal",
+        "a lesson in trusting your own signal",
         "a call to refine what you are truly asking for",
         "an invitation to release an old pattern that no longer fits",
         "a reminder that your pace and the world’s pace rarely match perfectly",
@@ -113,9 +100,7 @@ def derive_lesson(question: str, rng: random.Random) -> str:
     ]
     return rng.choice(fragments)
 
-
 def compose_prophecy(question: str) -> str:
-    # Seed RNG from question for deterministic uniqueness
     seed = seed_from_question(question)
     rng = random.Random(seed)
 
@@ -125,7 +110,6 @@ def compose_prophecy(question: str) -> str:
     convergence = weigh_convergence(intent, tension, rng)
     lesson = derive_lesson(question, rng)
 
-    # Intent-specific flavor
     if intent == "heart":
         domain_line = "In the chambers of connection and affection, the pattern brightens around you."
     elif intent == "path_of_work":
@@ -139,7 +123,6 @@ def compose_prophecy(question: str) -> str:
     else:
         domain_line = "In the unlabelled territory of your question, the pattern refuses simple naming."
 
-    # Convergence interpretation
     if convergence == "favored_shift":
         convergence_line = "Under this symbolic sky, the shift you seek is strongly favored."
     elif convergence == "possible_with_alignment":
@@ -149,10 +132,8 @@ def compose_prophecy(question: str) -> str:
     else:
         convergence_line = "In the current pattern, the shift resists forming, asking you to reconsider the frame of the question."
 
-    # Timeline line
     timeline_line = f"The currents cluster around {timeline}, not as a fixed date, but as a phase of readiness."
 
-    # Closing
     closing_options = [
         "Several timelines shimmer; your choices determine which one condenses into form.",
         "Nothing is guaranteed, but your attention is already bending the field.",
@@ -161,7 +142,6 @@ def compose_prophecy(question: str) -> str:
     ]
     closing_line = rng.choice(closing_options)
 
-    # Final assembly
     prophecy = (
         "The Veil stirs. The currents gather around your question. "
         f"{domain_line} "
